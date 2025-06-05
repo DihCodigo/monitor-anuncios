@@ -1,97 +1,48 @@
-// backend/server.js
-require('dotenv').config();
-const express = require('express');
-const { Pool } = require('pg');
-const cors = require('cors');
+import express from 'express';
+import dotenv from 'dotenv';
+import { pool } from './db.js';
+
+dotenv.config();
 
 const app = express();
-app.use(cors());
+const PORT = process.env.PORT || 3000;
+
 app.use(express.json());
 
-// 🔧 Conexão com PostgreSQL
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.LOCAL_DEV ? false : { rejectUnauthorized: false }
-});
+// Cria a tabela caso não exista
+await pool.query(`
+  CREATE TABLE IF NOT EXISTS logs_anuncios (
+    id SERIAL PRIMARY KEY,
+    ad_unit TEXT,
+    status TEXT,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+`);
 
-// 🧱 Criação da tabela se não existir
-const createTableQuery = `
-CREATE TABLE IF NOT EXISTS logs_anuncios (
-  id SERIAL PRIMARY KEY,
-  timestamp TEXT,
-  adUnit TEXT,
-  slotId TEXT,
-  pageUrl TEXT,
-  deliveredSize TEXT,
-  userAgent TEXT
-);`;
-
-pool.query(createTableQuery)
-  .then(() => console.log("🗂️ Tabela 'logs_anuncios' pronta"))
-  .catch(err => console.error("Erro criando tabela:", err));
-
-// 📥 Endpoint para logs
-app.post('/log-anuncio', async (req, res) => {
-  const { timestamp, adUnit, slotId, pageUrl, deliveredSize, userAgent } = req.body;
-
-  try {
-    const result = await pool.query(`
-      INSERT INTO logs_anuncios (timestamp, adUnit, slotId, pageUrl, deliveredSize, userAgent)
-      VALUES ($1, $2, $3, $4, $5, $6)
-      RETURNING id
-    `, [timestamp, adUnit, slotId, pageUrl, deliveredSize, userAgent]);
-
-    res.json({ status: 'ok', id: result.rows[0].id });
-  } catch (err) {
-    console.error("❌ Erro ao inserir log:", err);
-    res.status(500).json({ status: 'error', error: err.message });
-  }
-});
-
-// 🔍 Visualização dos logs
-app.get('/logs', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM logs_anuncios ORDER BY id DESC');
-
-    let html = `
-      <h2>📋 Logs de Anúncios</h2>
-      <table border="1" cellpadding="5">
-        <tr>
-          <th>ID</th>
-          <th>Timestamp</th>
-          <th>Ad Unit</th>
-          <th>Slot ID</th>
-          <th>Page URL</th>
-          <th>Delivered Size</th>
-          <th>User Agent</th>
-        </tr>`;
-
-    result.rows.forEach(row => {
-      html += `
-        <tr>
-          <td>${row.id}</td>
-          <td>${row.timestamp}</td>
-          <td>${row.adUnit}</td>
-          <td>${row.slotId}</td>
-          <td><a href="${row.pageUrl}" target="_blank">${row.pageUrl}</a></td>
-          <td>${row.deliveredSize}</td>
-          <td>${row.userAgent}</td>
-        </tr>`;
-    });
-
-    html += '</table>';
-    res.send(html);
-  } catch (err) {
-    res.status(500).send('Erro ao buscar logs');
-  }
-});
-
-// Info
 app.get('/', (req, res) => {
-  res.send(`<h2>🛰️ API Monitoramento de Anúncios</h2><p>Use <code>/log-anuncio</code> via POST.</p>`);
+  res.send('🛰️ API Monitoramento de Anúncios\nUse /log-anuncio via POST.');
 });
 
-const PORT = process.env.PORT || 3000;
+app.post('/log-anuncio', async (req, res) => {
+  const { ad_unit, status } = req.body;
+
+  if (!ad_unit || !status) {
+    return res.status(400).json({ error: 'ad_unit e status são obrigatórios.' });
+  }
+
+  await pool.query(
+    'INSERT INTO logs_anuncios (ad_unit, status) VALUES ($1, $2)',
+    [ad_unit, status]
+  );
+
+  res.status(201).json({ message: 'Log registrado com sucesso' });
+});
+
+app.get('/logs', async (req, res) => {
+  const result = await pool.query('SELECT * FROM logs_anuncios ORDER BY timestamp DESC');
+  res.json(result.rows);
+});
+
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
+  console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
