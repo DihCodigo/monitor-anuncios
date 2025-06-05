@@ -1,48 +1,27 @@
+// server.js
 import express from 'express';
-import dotenv from 'dotenv';
-import { pool } from './db.js';
-
-dotenv.config();
+import cors from 'cors';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Middlewares
+app.use(cors());
 app.use(express.json());
 
-// Cria a tabela caso não exista
-await pool.query(`
-  CREATE TABLE IF NOT EXISTS logs_anuncios (
-    id SERIAL PRIMARY KEY,
-    ad_unit TEXT,
-    status TEXT,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  );
-`);
-
+// Rota de teste
 app.get('/', (req, res) => {
-  res.send('🛰️ API Monitoramento de Anúncios\nUse /log-anuncio via POST.');
+  res.send('✅ Monitor de Anúncios rodando com sucesso no Render!');
 });
 
-app.post('/log-anuncio', async (req, res) => {
-  const { ad_unit, status } = req.body;
-
-  if (!ad_unit || !status) {
-    return res.status(400).json({ error: 'ad_unit e status são obrigatórios.' });
-  }
-
-  await pool.query(
-    'INSERT INTO logs_anuncios (ad_unit, status) VALUES ($1, $2)',
-    [ad_unit, status]
-  );
-
-  res.status(201).json({ message: 'Log registrado com sucesso' });
+// Aqui você pode adicionar suas rotas reais do projeto:
+app.post('/api/anuncio', (req, res) => {
+  const data = req.body;
+  console.log('📥 Dados recebidos:', data);
+  res.status(200).json({ status: 'ok', received: data });
 });
 
-app.get('/logs', async (req, res) => {
-  const result = await pool.query('SELECT * FROM logs_anuncios ORDER BY timestamp DESC');
-  res.json(result.rows);
-});
-
+// Inicia o servidor
 app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
+  console.log(`🚀 Servidor ouvindo na porta ${PORT}`);
 });
