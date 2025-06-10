@@ -5,7 +5,7 @@ const { Pool } = require('pg');
 const path = require('path');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -46,12 +46,17 @@ app.post('/api/track-slot', async (req, res) => {
 
 /** */
 
-app.get('/script-monitoramento.js', (req, res) => {
+app.get('/ad-status.js', (req, res) => {
   res.type('application/javascript');
   res.sendFile(path.join(__dirname, 'public', 'ad-status.js'));
 });
 
 /** */
+
+app.get('/', (req, res) => {
+  res.send('🎉 Backend de monitoramento ativo!');
+});
+
 
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);

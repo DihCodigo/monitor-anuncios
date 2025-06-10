@@ -77,7 +77,7 @@ googletag.cmd.push(() => {
           prebid_won = winning.some(bid => bid.adUnitCode === slot_id);
         }
 
-        fetch('http://localhost:3000/api/track-slot', {
+        fetch('https://monitor-anuncios-production.up.railway.app/api/track-slot', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

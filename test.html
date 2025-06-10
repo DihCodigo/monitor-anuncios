@@ -1,49 +1,57 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <title>Teste de Slot</title>
   <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
-  
+
   <style>
-    #div-gpt-ad { width: 300px; height: 250px; background: #f0f0f0; margin: 20px auto; }
+    #div-gpt-ad {
+      width: 300px;
+      height: 250px;
+      background: #f0f0f0;
+      margin: 20px auto;
+    }
   </style>
 </head>
+
 <body>
   <h1>Teste de Slot do GPT</h1>
 
   <div id="div-gpt-ad" style="width:300px; height:250px; background:#f0f0f0; margin: 20px auto;"></div>
-<div id="header" style="min-width:300px; min-height:50px;"></div>
-        <script>
-  window.googletag = window.googletag || { cmd: [] };
+  <div id="header" style="min-width:300px; min-height:50px;"></div>
+  <script>
+    window.googletag = window.googletag || { cmd: [] };
 
-  googletag.cmd.push(function () {
-    // Define tamanho dinâmico para header
-    var sz = [[320, 50]];
-    if (window.innerWidth > 980) {
-      sz = [[970, 250]];
-    } else if (window.innerWidth > 768 && window.innerWidth < 980) {
-      sz = [[728, 90]];
-    }
+    googletag.cmd.push(function () {
+      // Define tamanho dinâmico para header
+      var sz = [[320, 50]];
+      if (window.innerWidth > 980) {
+        sz = [[970, 250]];
+      } else if (window.innerWidth > 768 && window.innerWidth < 980) {
+        sz = [[728, 90]];
+      }
 
-    googletag.defineSlot("/7542/parceiros/amomeupet", sz, "header")
-      .addService(googletag.pubads())
-      .setTargeting("pos", "first Position");
+      googletag.defineSlot("/7542/parceiros/amomeupet", sz, "header")
+        .addService(googletag.pubads())
+        .setTargeting("pos", "first Position");
 
-    googletag.defineSlot('/123456789/exemplo', [300, 250], 'div-gpt-ad')
-      .addService(googletag.pubads());
+      googletag.defineSlot('/123456789/exemplo', [300, 250], 'div-gpt-ad')
+        .addService(googletag.pubads());
 
-    googletag.pubads().enableSingleRequest();
-    googletag.pubads().setCentering(true);
+      googletag.pubads().enableSingleRequest();
+      googletag.pubads().setCentering(true);
 
-    googletag.enableServices();
+      googletag.enableServices();
 
-    googletag.display("header");
-    googletag.display("div-gpt-ad");
-  });
-</script>
+      googletag.display("header");
+      googletag.display("div-gpt-ad");
+    });
+  </script>
 
   <!-- Seu script com rastreamento -->
   <script src="./public/ad-status.js"></script>
 </body>
+
 </html>
