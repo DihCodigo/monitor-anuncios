@@ -1,2 +1,25 @@
-node_modules/
+# Node modules
+/node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ambiente
 .env
+
+# Pasta build/dist se usar alguma build
+/dist/
+/build/
+
+# Sistema operacional (macOS, Windows, Linux)
+.DS_Store
+Thumbs.db
+
+# IDEs e editores
+.vscode/
+.idea/
+
+# Arquivos temporários
+*.log
