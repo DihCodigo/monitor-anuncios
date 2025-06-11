@@ -11,6 +11,9 @@ const PORT = process.env.PORT || 8080;
 
 app.use(cors());
 app.use(express.json());
+// Ignora requisições ao favicon
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+
 
 /*
 const pool = new Pool({
@@ -64,16 +67,13 @@ app.get('/ad-status.js', (req, res) => {
 });
 
 /** */
-
+/*
 app.get('/', (req, res) => {
   res.send('🎉 Backend de monitoramento ativo!');
 });
+*/
 
-/*
 app.listen(port, '0.0.0.0', () => {
   console.log(`🚀 Servidor ativo na porta ${port}`);
 });
-*/
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor ativo na porta ${PORT}`);
-});
+
