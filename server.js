@@ -73,7 +73,9 @@ app.get('/', (req, res) => {
 });
 */
 
-app.listen(port, '0.0.0.0', () => {
-  console.log(`🚀 Servidor ativo na porta ${port}`);
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Servidor ativo na porta ${PORT}`);
 });
+
 
