@@ -10,12 +10,21 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+/*
 const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
   database: 'ad_monitoring',
   password: '#Dih0123',
   port: 5432
+});
+*/
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 app.post('/api/track-slot', async (req, res) => {
