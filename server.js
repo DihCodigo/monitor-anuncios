@@ -5,7 +5,9 @@ const { Pool } = require('pg');
 const path = require('path');
 
 const app = express();
-const port = process.env.PORT || 3000;
+//const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
+
 
 app.use(cors());
 app.use(express.json());
@@ -67,7 +69,11 @@ app.get('/', (req, res) => {
   res.send('🎉 Backend de monitoramento ativo!');
 });
 
-
+/*
 app.listen(port, '0.0.0.0', () => {
   console.log(`🚀 Servidor ativo na porta ${port}`);
+});
+*/
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor ativo na porta ${PORT}`);
 });
