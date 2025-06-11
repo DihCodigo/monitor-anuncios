@@ -23,9 +23,10 @@ const pool = new Pool({
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
-    rejectUnauthorized: false
+    rejectUnauthorized: false, // necessário em ambientes como Railway
   }
 });
+
 
 app.post('/api/track-slot', async (req, res) => {
   const { path, slot_id, ad_unit, delivered_size, unit_sizes, prebid_won } = req.body;
